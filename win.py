@@ -1,31 +1,27 @@
 import urllib2
-fp = urllib2.urlopen('http://mlb.mlb.com/home')
+import datetime
+
+s =  datetime.datetime.now() 
+#url = 'http://www.baseball-reference.com/play-index/st.cgi?date='+ str(s.year) +'-'+ str(s.month) +'-'+ str(s.day-1)
+url = 'http://www.baseball-reference.com/play-index/st.cgi?date='+ str(s.year) +'-06-01'
+fp = urllib2.urlopen(url)
 html = fp.read()
 fp.close()
- 
-#TEAM[k][j][i][h]
 
-Aeast = ["Toronto","Boston","NY Yankees","Baltimore","Tampa Bay"]
-Acent = ["Detroit","Chi White Sox","Kansas City","Cleveland","Minnesota"]
-Awest = ["Seattle","Oakland","LA Angels","Texas","Houston"]
-Neast = ["Washington","NY Mets","Atlanta","Miami","Philadelphia"]
-Ncent = ["St. Louis","Chi Cubs","Pittsburgh","Cincinnati","Milwaukee"]
-Nwest = ["LA Dodgers","San Francisco","San Diego","Arizona","Colorado"]
+a = html.splitlines()
+for i in range(4,30):
+	if len(a[i]) == 0:
+		i=i
+	elif len(a[i]) == 6:
+		break
+	else:
+		winner = a[i][ a[i].find("<strong>") + len("<strong>") ] + a[i][ a[i].find("<strong>") + len("<strong>") + 1] + a[i][ a[i].find("<strong>") + len("<strong>") + 2 ]
+		winner = winner.replace("<","")  
+		if a[i].find("<strong>") == 0:
+			loser = a[i][len(winner) + len("<strong></strong>")+4] + a[i][len(winner) + len("<strong></strong>")+5] + a[i][len(winner) + len("<strong></strong>")+6]   
+		else:
+			loser = a[i][0] + a[i][1] + a[i][2]
+			loser = loser.replace(" ","")
+		print winner + "  win"
+		print loser  + "  lose"
 
-AL = [Aeast, Acent, Awest]
-NL = [Neast, Ncent, Nwest]
-
-TEAM = [AL, NL]
-
-for k in range(2):
- for j in range(3):
-  for i in range(5):
-   a = TEAM[k][j][i]+"</td>\n<td class=\"td-w\">"
-   tmp1 = html[html.find(a) + len(a)]     + html[html.find(a) + len(a) + 1] + html[html.find(a) + len(a) + 2] 
-   tmp2 = html[html.find(a) + len(a) +25] + html[html.find(a) + len(a) +26] + html[html.find(a) + len(a) +27]
-   print TEAM[k][j][i] + ": ",
-   print int(tmp1.replace("<","").replace("t","")),
-   print int(tmp2.replace("<","").replace("t",""))
-
-#  TEAM[k][j][i][0] = int(tmp1.replace("<","").replace("t",""))
-#  TEAM[k][j][i][1] = int(tmp2.replace("<","").replace("t",""))
