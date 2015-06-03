@@ -15,10 +15,10 @@ for i in range(4,30):
 	elif len(a[i]) == 6:
 		break
 	else:
-		winner = a[i][ a[i].find("<strong>") + len("<strong>") ] + a[i][ a[i].find("<strong>") + len("<strong>") + 1] + a[i][ a[i].find("<strong>") + len("<strong>") + 2 ]
+		winner = a[i][a[i].find("<strong>")+len("<strong>")] + a[i][ a[i].find("<strong>")+len("<strong>")+1] + a[i][ a[i].find("<strong>")+len("<strong>")+2]
 		winner = winner.replace("<","")  
 		if a[i].find("<strong>") == 0:
-			loser = a[i][len(winner) + len("<strong></strong>")+4] + a[i][len(winner) + len("<strong></strong>")+5] + a[i][len(winner) + len("<strong></strong>")+6]   
+			loser = a[i][len(winner) + len("<strong></strong>")+4] + a[i][len(winner) + len("<strong></strong>")+5] + a[i][len(winner) + len("<strong></strong>") + 6]   
 		else:
 			loser = a[i][0] + a[i][1] + a[i][2]
 			loser = loser.replace(" ","")
