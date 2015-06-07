@@ -165,7 +165,15 @@ for i in range(1,len(a)):
 			ws.write((i-1)*3+2,7,rp2[1])
 			ws.write((i-1)*3+2,8,rp3[1])
 			ws.write((i-1)*3+2,9,cl[1])
-			
+	print cl[0],
+	print rp1[0],
+	print rp2[0],
+	print rp3[0]
+	
+	print cl[1],
+	print rp1[1],
+	print rp2[1],
+	print rp3[1]
 
 	if k1>k2 :
 		ws.write((i-1)*3+1,12,k1-k2) #differ
