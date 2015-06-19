@@ -1,14 +1,19 @@
+
+import urllib
 import urllib2
 import datetime
 from xlwt import Workbook
+from bs4 import BeautifulSoup
 
 ###int###
 today = datetime.datetime.now() - datetime.timedelta(hours=4)
 yy = today.year
 mm = str(today.month)
 dd = str(today.day)
-if today.day < 10:
+
+if today.month < 10:
 	mm = '0'+str(today.month)
+if today.day < 10:
 	dd = '0'+str(today.day)
 
 team = ["Arizona","Atlanta","Baltimore","Boston","Chi Cubs",
@@ -28,6 +33,8 @@ b3 = {}
 wb = Workbook()
 ws = wb.add_sheet( "Detector"+str(yy)+str(mm)+str(dd) ) 
 
+print str(yy)+str(mm)+str(dd)
+
 ws.write(0,1,'win')
 ws.write(0,2,'pitcher')
 ws.write(0,3,'win')
@@ -37,15 +44,16 @@ ws.write(0,6,'RP1')
 ws.write(0,7,'RP2')
 ws.write(0,8,'RP3')
 ws.write(0,9,'CL')
-ws.write(0,10,'R/G')
-ws.write(0,11,'ERA*R/G')
-ws.write(0,12,'differ')
+
+#ws.write(0,11,'ERA*R/G')
+#ws.write(0,12,'differ')
 
 url = 'http://gd2.mlb.com/components/game/mlb/year_2015/month_'+mm+'/day_'+dd+'/epg.xml'
 fp = urllib2.urlopen(url)
 html = fp.read()
 fp.close()
 a = html.split('venue=')
+
 url = 'http://gd2.mlb.com/components/game/mlb/year_2015/month_'+mm+'/day_'+dd+'/scoreboard.xml'
 fp = urllib2.urlopen(url)
 html = fp.read()
@@ -57,12 +65,6 @@ fp = urllib2.urlopen(url)
 html = fp.read()
 fp.close()
 a2 = html.split('<tr  class=\"\">')
-
-url = 'http://www.baseball-reference.com/teams/NYY/2015.shtml'
-fp = urllib2.urlopen(url)
-html = fp.read()
-fp.close()
-a3 = html.split('<strong>RP</strong></td>')
 
 for i in range(1,31): 
 	b2 = a2[i].splitlines()
@@ -93,8 +95,8 @@ for i in range(1,len(a)):
 	
 	tmp1 = b[34][24:len(b)].replace('\"','')+','+teamwin1+','+pname1+","+pwin1+','+ploss1+","+pera1
 	tmp2 = b[42][24:len(b)].replace('\"','')+','+teamwin2+','+pname2+','+pwin2+','+ploss2+','+pera2
-	tmp1 = tmp1.replace('<','').replace('>','').replace('/','')
-	tmp2 = tmp2.replace('<','').replace('>','').replace('/','')
+	tmp1 = tmp1.replace('<','').replace('>','').replace('/','').replace('=','')
+	tmp2 = tmp2.replace('<','').replace('>','').replace('/','').replace('=','')
 	print tmp1
 	print tmp2
 	ok1 = tmp1.split(',')
@@ -115,8 +117,8 @@ for i in range(1,len(a)):
 		ws.write((i-1)*3+2,j,ok2[j])
 	for k in range(0,30):
 		if ok1[0] == team[k]:
-			ws.write((i-1)*3+1,10,b3[k]) #R/G
-			ws.write((i-1)*3+1,11,ok2[5]*b3[k]) #ERA*R/G
+			#ws.write((i-1)*3+1,10,b3[k]) #R/G
+			#ws.write((i-1)*3+1,11,ok2[5]*b3[k]) #ERA*R/G
 			k1 = ok2[5]*b3[k]
 			
 			url = 'http://www.baseball-reference.com/teams/'+tm[k]+'/2015.shtml'
@@ -141,8 +143,8 @@ for i in range(1,len(a)):
 			ws.write((i-1)*3+1,9,cl[0])
 			
 		if ok2[0] == team[k]:
-			ws.write((i-1)*3+2,10,b3[k]) #R/G
-			ws.write((i-1)*3+2,11,ok1[5]*b3[k])#ERA*R/G
+			#ws.write((i-1)*3+2,10,b3[k]) #R/G
+			#ws.write((i-1)*3+2,11,ok1[5]*b3[k])#ERA*R/G
 			k2 = ok1[5]*b3[k]
 			
 			url = 'http://www.baseball-reference.com/teams/'+tm[k]+'/2015.shtml'
@@ -165,6 +167,10 @@ for i in range(1,len(a)):
 			ws.write((i-1)*3+2,7,rp2[1])
 			ws.write((i-1)*3+2,8,rp3[1])
 			ws.write((i-1)*3+2,9,cl[1])
+
+	print ''
+	
+"""
 	print cl[0],
 	print rp1[0],
 	print rp2[0],
@@ -174,6 +180,7 @@ for i in range(1,len(a)):
 	print rp1[1],
 	print rp2[1],
 	print rp3[1]
+	
 
 	if k1>k2 :
 		ws.write((i-1)*3+1,12,k1-k2) #differ
@@ -185,6 +192,5 @@ for i in range(1,len(a)):
 		if k2-k1 >10 :
 			if ok1[5]!=0 and ok2[5]!=0: 
 				ws.write((i-1)*3+2,13,'!!!')
-	
-	print ''
+"""	
 wb.save( "test.xls" )
